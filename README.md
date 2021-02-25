@@ -1,4 +1,4 @@
-# Certificate Authority-Aided Searchable Encryption Framework in Cloud Systems
+# ICA-IBSE
 
 
 This project provides  PoC implementations to evaluate the performance of various public-key authentication searchable encryption schemes:
@@ -6,7 +6,7 @@ This project provides  PoC implementations to evaluate the performance of variou
 1. LLZ19 - Inf. Sci. - [Designated-server identity-based authenticated encryption with keyword search for encrypted emails](https://doi.org/10.1016/j.ins.2019.01.004)
 2. QCHLZ20 - Inf. Sci. - [Public-key authenticated encryption with keyword search revisited: Security model and constructions](https://doi.org/10.1016/j.ins.2019.12.063)
 3. LLW21 - IEEE Trans. Ind. Informatics - [Pairing-Free Certificate-Based Searchable Encryption Supporting Privacy-Preserving Keyword Search Function for IIoTs](https://doi.org/10.1109/TII.2020.3006474)
-4. LTTCM21 (Ours) - ePrint - [Certificate Authority-Aided Searchable Encryption Framework in Cloud Systems]()
+4. LTTCM21 (Ours) - ePrint - [Identity-certifying Authority-aided Identity-based Searchable Encryption Framework in Cloud System]()
 
 
 

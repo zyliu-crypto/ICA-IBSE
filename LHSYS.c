@@ -145,7 +145,7 @@ int main()
         printf("success\n");
     }
 
-gettimeofday(&stop, NULL);
+    gettimeofday(&stop, NULL);
     timersub(&stop, &start, &diff);
 
     double time_used = diff.tv_sec + (double)diff.tv_usec / 1000000.0;

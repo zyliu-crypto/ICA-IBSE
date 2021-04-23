@@ -5,7 +5,6 @@
 #include <time.h>
 #include <sys/time.h>
 
-
 typedef unsigned char byte;
 struct timeval stop, start, diff;
 
@@ -146,7 +145,7 @@ int main()
 
     sha3_HashBuffer(256, SHA3_FLAGS_KECCAK, string_bytes_4, sizeof(string_bytes_4), h2_hash_test, sizeof(h2_hash_test));
 
-   element_from_hash(h2_test, h2_hash_test, 32);
+    element_from_hash(h2_test, h2_hash_test, 32);
     element_pow_zn(c_1_exp_test, c_1, h2_test);
 
     if (!element_cmp(c_2, c_1_exp_test))

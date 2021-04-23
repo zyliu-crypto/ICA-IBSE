@@ -30,7 +30,7 @@ int main()
     // generate system parmeter
     element_random(lambda);
     element_init_G1(p_pub, pairing);
-    element_pow_zn(p_pub, p, lambda);
+    element_mul_zn(p_pub, p, lambda);
 
     // keygen
     element_init_Zr(sk_s_1, pairing);
@@ -48,10 +48,10 @@ int main()
     element_init_G1(p_s_2, pairing);
     element_init_G1(p_r_2, pairing);
 
-    element_pow_zn(p_s_1, p, sk_s_1);
-    element_pow_zn(p_r_1, p, sk_r_1);
-    element_pow_zn(p_s_2, p, sk_s_2);
-    element_pow_zn(p_r_2, p, sk_r_2);
+    element_mul_zn(p_s_1, p, sk_s_1);
+    element_mul_zn(p_r_1, p, sk_r_1);
+    element_mul_zn(p_s_2, p, sk_s_2);
+    element_mul_zn(p_r_2, p, sk_r_2);
 
     // cert
     element_init_Zr(beta_s, pairing);
@@ -61,8 +61,8 @@ int main()
 
     element_random(beta_s);
     element_random(beta_r);
-    element_pow_zn(Q_s, p, beta_s);
-    element_pow_zn(Q_r, p, beta_r);
+    element_mul_zn(Q_s, p, beta_s);
+    element_mul_zn(Q_r, p, beta_r);
 
     int p_s_1_len = element_length_in_bytes(p_s_1);
     unsigned char elem_p_s_1[p_s_1_len];
@@ -105,7 +105,7 @@ int main()
     element_from_hash(mod_int_hash_string_DO_p_s_Q_s, hash_string_DO_p_s_Q_s, 32);
 
     element_init_Zr(f1_id_s_pk_lambda, pairing);
-    element_pow_zn(f1_id_s_pk_lambda, lambda, mod_int_hash_string_DO_p_s_Q_s);
+    element_mul_zn(f1_id_s_pk_lambda, lambda, mod_int_hash_string_DO_p_s_Q_s);
 
     element_init_Zr(cert_s, pairing);
     element_add(cert_s, beta_s, f1_id_s_pk_lambda);
@@ -127,7 +127,7 @@ int main()
     element_from_hash(mod_int_hash_string_DU_p_r_Q_r, hash_string_DU_p_r_Q_r, 32);
 
     element_init_Zr(f1_id_r_pk_lambda, pairing);
-    element_pow_zn(f1_id_r_pk_lambda, lambda, mod_int_hash_string_DU_p_r_Q_r);
+    element_mul_zn(f1_id_r_pk_lambda, lambda, mod_int_hash_string_DU_p_r_Q_r);
 
     element_init_Zr(cert_r, pairing);
     element_add(cert_r, beta_r, f1_id_r_pk_lambda);
@@ -142,9 +142,9 @@ int main()
     element_init_G1(kappa_ct, pairing);
     element_init_G1(c_1, pairing);
     element_random(r);
-    element_pow_zn(c_1, p, r);
+    element_mul_zn(c_1, p, r);
 
-    element_pow_zn(kappa_ct, p_r_1, sk_s_1);
+    element_mul_zn(kappa_ct, p_r_1, sk_s_1);
 
     int len_IDB_PKB = sizeof(DU) + sizeof(elem_p_r_1) + sizeof(elem_p_r_2) + sizeof(elem_Q_r);
     unsigned char string_IDB_PKB[len_IDB_PKB];
@@ -164,7 +164,7 @@ int main()
 
     element_t p_pub_mod_int_hash_string_IDB_PKB;
     element_init_G1(p_pub_mod_int_hash_string_IDB_PKB, pairing);
-    element_pow_zn(p_pub_mod_int_hash_string_IDB_PKB, p_pub, mod_int_hash_string_IDB_PKB);
+    element_mul_zn(p_pub_mod_int_hash_string_IDB_PKB, p_pub, mod_int_hash_string_IDB_PKB);
 
     element_t tmp_RB;
     element_init_G1(tmp_RB, pairing);
@@ -194,9 +194,9 @@ int main()
 
     element_t r_mod_int_hash_string_IDA_IDB_kappa_kw;
     element_init_Zr(r_mod_int_hash_string_IDA_IDB_kappa_kw, pairing);
-    element_pow_zn(r_mod_int_hash_string_IDA_IDB_kappa_kw, r, mod_int_hash_string_IDA_IDB_kappa_kw);
+    element_mul_zn(r_mod_int_hash_string_IDA_IDB_kappa_kw, r, mod_int_hash_string_IDA_IDB_kappa_kw);
     element_init_G1(mu, pairing);
-    element_pow_zn(mu, R_B, r_mod_int_hash_string_IDA_IDB_kappa_kw);
+    element_mul_zn(mu, R_B, r_mod_int_hash_string_IDA_IDB_kappa_kw);
 
     element_t s_ct, c_2, v_ct, sk_s_2_cert_s, inv_sk_s_2_cert_s;
     element_init_Zr(s_ct, pairing);
@@ -208,8 +208,8 @@ int main()
     element_random(s_ct);
     element_add(sk_s_2_cert_s, sk_s_2, cert_s);
     element_invert(inv_sk_s_2_cert_s, sk_s_2_cert_s);
-    element_pow_zn(c_2, s_ct, inv_sk_s_2_cert_s);
-    element_pow_zn(v_ct, p, s_ct);
+    element_mul_zn(c_2, s_ct, inv_sk_s_2_cert_s);
+    element_mul_zn(v_ct, p, s_ct);
 
     element_t c_3, t_ct, f_3_mu_v;
     element_init_Zr(t_ct, pairing);
@@ -277,7 +277,7 @@ int main()
     char kw_td[] = "Crypto";
     element_t kappa_td, td_1, td_2;
     element_init_G1(kappa_td, pairing);
-    element_pow_zn(kappa_td, p_s_1, sk_r_1);
+    element_mul_zn(kappa_td, p_s_1, sk_r_1);
 
     int kappa_td_len = element_length_in_bytes(kappa_td);
     unsigned char elem_kappa_td[kappa_td_len];
@@ -303,7 +303,7 @@ int main()
     element_init_Zr(sk_r_2_cert_r, pairing);
     element_add(sk_r_2_cert_r, sk_r_2, cert_r);
     element_init_Zr(td_1, pairing);
-    element_pow_zn(td_1, mod_int_hash_string_td_IDA_IDB_kappa_kw, sk_r_2_cert_r);
+    element_mul_zn(td_1, mod_int_hash_string_td_IDA_IDB_kappa_kw, sk_r_2_cert_r);
 
     int len_IDA_PKA = sizeof(DO) + sizeof(elem_p_s_1) + sizeof(elem_p_s_2) + sizeof(elem_Q_s);
     unsigned char string_IDA_PKA[len_IDA_PKA];
@@ -325,7 +325,7 @@ int main()
 
     element_t p_pub_mod_int_hash_string_IDA_PKA;
     element_init_G1(p_pub_mod_int_hash_string_IDA_PKA, pairing);
-    element_pow_zn(p_pub_mod_int_hash_string_IDA_PKA, p_pub, mod_int_hash_string_IDA_PKA);
+    element_mul_zn(p_pub_mod_int_hash_string_IDA_PKA, p_pub, mod_int_hash_string_IDA_PKA);
 
     element_t tmp_td_2;
     element_init_G1(tmp_td_2, pairing);
@@ -339,8 +339,8 @@ int main()
     element_init_G1(mu_test, pairing);
     element_init_G1(v_test, pairing);
     element_init_Zr(t_test, pairing);
-    element_pow_zn(mu_test, c_1, td_1);
-    element_pow_zn(v_test, td_2, c_2);
+    element_mul_zn(mu_test, c_1, td_1);
+    element_mul_zn(v_test, td_2, c_2);
 
     int mu_test_len = element_length_in_bytes(mu_test);
     unsigned char elem_mu_test[mu_test_len];

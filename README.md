@@ -21,6 +21,6 @@ How to run?
 ===========
 
 ```
-gcc file.c sha3.c -L. -lpbc -lgmp
+gcc file.c -L. -lpbc -lgmp
 ./a.out
 ```

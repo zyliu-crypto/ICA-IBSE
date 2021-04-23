@@ -120,7 +120,8 @@ int main()
     strncat(string_bytes_k_td_add_kw_td, kw_td, sizeof(kw_td));
     element_from_hash(H_k_w_td, string_bytes_k_td_add_kw_td, sizeof(string_bytes_k_td_add_kw_td));
 
-    element_mul_zn(t_1, H_k_w_td, h_r);
+    element_mul(t_1, H_k_w_td, h_r);
+    element_pow_zn(t_2, g, r);
     // Test
 
     gettimeofday(&start, NULL);
@@ -137,11 +138,11 @@ int main()
     pairing_apply(t_1_sk_svr_c2, c_2, t_1_sk_svr, pairing);
 
     element_init_GT(c_1_e_t_2_sk_svr_c_3, pairing);
-    element_mul_zn(c_1_e_t_2_sk_svr_c_3, c_1, t_2_sk_svr_c3);
+    element_mul(c_1_e_t_2_sk_svr_c_3, c_1, t_2_sk_svr_c3);
 
-    if (!element_cmp(k_ct, k_td))
+    if (!element_cmp(c_1_e_t_2_sk_svr_c_3, t_1_sk_svr_c2))
     {
-        //printf("success\n");
+        printf("success\n");
     }
 
 gettimeofday(&stop, NULL);

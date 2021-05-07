@@ -5,9 +5,10 @@
 #include <time.h>
 #include <sys/time.h>
 
-
 typedef unsigned char byte;
-struct timeval stop, start, diff;
+struct timeval stop1, start1, diff1;
+struct timeval stop2, start2, diff2;
+struct timeval stop3, start3, diff3;
 
 int main()
 {
@@ -37,7 +38,8 @@ int main()
     element_init_G1(h, pairing);
     element_init_Zr(sk_svr, pairing);
     element_init_G2(pk_svr, pairing);
-
+    element_random(g);
+    element_random(h);
     element_random(sk_svr);
     element_pow_zn(pk_svr, g, sk_svr);
 
@@ -61,6 +63,7 @@ int main()
 
     // PAEKS
 
+    gettimeofday(&start1, NULL);
     char kw_ct[] = "Crypto";
 
     element_init_Zr(s, pairing);
@@ -92,9 +95,14 @@ int main()
     element_pow_zn(pk_s_svr, pk_svr, s);
     pairing_apply(c_1, H_k_w_ct, pk_s_svr, pairing);
 
-    
+    gettimeofday(&stop1, NULL);
+    timersub(&stop1, &start1, &diff1);
+
+    printf("Enc took %f ms\n", diff1.tv_sec * 1000.0f + diff1.tv_usec / 1000.0f);
+
     // Trapdoor
 
+    gettimeofday(&start2, NULL);
     char kw_td[] = "Crypto";
 
     element_init_Zr(r, pairing);
@@ -122,9 +130,15 @@ int main()
 
     element_mul(t_1, H_k_w_td, h_r);
     element_pow_zn(t_2, g, r);
+
+    gettimeofday(&stop2, NULL);
+    timersub(&stop2, &start2, &diff2);
+
+    printf("Trapdoor took %f ms\n", diff2.tv_sec * 1000.0f + diff2.tv_usec / 1000.0f);
+
     // Test
 
-    gettimeofday(&start, NULL);
+    gettimeofday(&start3, NULL);
     element_init_GT(t_2_sk_svr_c3, pairing);
     element_init_G2(t_2_sk_svr, pairing);
 
@@ -145,11 +159,9 @@ int main()
         printf("success\n");
     }
 
-    gettimeofday(&stop, NULL);
-    timersub(&stop, &start, &diff);
+    gettimeofday(&stop3, NULL);
+    timersub(&stop3, &start3, &diff3);
 
-    double time_used = diff.tv_sec + (double)diff.tv_usec / 1000000.0;
-
-    printf("%f", time_used);
+    printf("Test took %f ms\n", diff3.tv_sec * 1000.0f + diff3.tv_usec / 1000.0f);
     return 0;
 }

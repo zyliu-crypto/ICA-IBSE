@@ -2,6 +2,11 @@
 #include "sha3.h"
 #include "string.h"
 #include <stdio.h>
+#include <sys/time.h>
+
+struct timeval stop1, start1, diff1;
+struct timeval stop2, start2, diff2;
+struct timeval stop3, start3, diff3;
 
 int main()
 {
@@ -21,19 +26,21 @@ int main()
 
     // generate system parmeter
     element_init_G1(g, pairing);
-
+    element_random(g);
     // generate pk/sk
 
     element_init_G1(pk_s, pairing);
     element_init_G1(pk_r, pairing);
     element_init_Zr(sk_s, pairing);
     element_init_Zr(sk_r, pairing);
-
+    element_random(sk_s);
+    element_random(sk_r);
     element_pow_zn(pk_s, g, sk_s);
     element_pow_zn(pk_r, g, sk_r);
 
     // PAEKS
 
+    gettimeofday(&start1, NULL);
     char kw_ct[] = "Crypto";
 
     element_init_Zr(r, pairing);
@@ -74,8 +81,13 @@ int main()
     memset(B, 0, 32);
     sha3_HashBuffer(256, SHA3_FLAGS_KECCAK, elem_bytes_t, sizeof(elem_bytes_t), B, sizeof(B));
 
+    gettimeofday(&stop1, NULL);
+    timersub(&stop1, &start1, &diff1);
+
+    printf("Enc took %f ms\n", diff1.tv_sec * 1000.0f + diff1.tv_usec / 1000.0f);
     // trapdoor
 
+    gettimeofday(&start2, NULL);
     char kw_td[] = "Crypto";
     element_t hx, h1_w_hx, td;
     element_init_G1(hx, pairing);
@@ -99,7 +111,12 @@ int main()
     element_init_G1(td, pairing);
     element_pow_zn(td, h1_w_hx, sk_r);
 
+    gettimeofday(&stop2, NULL);
+    timersub(&stop2, &start2, &diff2);
+
+    printf("Trapdoor took %f ms\n", diff2.tv_sec * 1000.0f + diff2.tv_usec / 1000.0f);
     // test
+    gettimeofday(&start3, NULL);
     element_t e_td_A;
     element_init_GT(e_td_A, pairing);
     pairing_apply(e_td_A, td, A, pairing);
@@ -115,8 +132,13 @@ int main()
 
     if (sizeof(B_test) == sizeof(B) && !strncmp(B_test, B, sizeof(B_test)))
     {
-        printf("successu\n");
+        printf("success\n");
     }
+
+    gettimeofday(&stop3, NULL);
+    timersub(&stop3, &start3, &diff3);
+
+    printf("Test took %f ms\n", diff3.tv_sec * 1000.0f + diff3.tv_usec / 1000.0f);
 
     return 0;
 }

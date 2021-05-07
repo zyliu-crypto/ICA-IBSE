@@ -6,7 +6,9 @@
 #include <sys/time.h>
 
 typedef unsigned char byte;
-struct timeval stop, start, diff;
+struct timeval stop1, start1, diff1;
+struct timeval stop2, start2, diff2;
+struct timeval stop3, start3, diff3;
 
 int main()
 {
@@ -41,6 +43,7 @@ int main()
 
     // Generate system parmeter
 
+    element_random(g);
     element_from_hash(H_s, DO, sizeof(DO));
     element_from_hash(H_r, DU, sizeof(DU));
 
@@ -53,6 +56,7 @@ int main()
 
     // PAEKS
 
+    gettimeofday(&start1, NULL);
     element_random(r);
     element_pow_zn(c_1, g, r);
     pairing_apply(k_1, H_r, sk_s, pairing);
@@ -101,13 +105,19 @@ int main()
     element_mul(rh2, r, h_2);
     element_pow_zn(c_2, g, rh2);
 
-    // Trapdoor
+    gettimeofday(&stop1, NULL);
+    timersub(&stop1, &start1, &diff1);
 
+    printf("Enc took %f ms\n", diff1.tv_sec * 1000.0f + diff1.tv_usec / 1000.0f);
+
+    // Trapdoor
+    gettimeofday(&start2, NULL);
     char keyword_2[] = "Crypto";
 
     // compute h1 value
 
     pairing_apply(k_2, H_s, sk_r, pairing);
+
     int element_len_3 = element_length_in_bytes(k_2);
 
     unsigned char elem_bytes_3[element_len_3];
@@ -126,9 +136,14 @@ int main()
     memset(h1_hash_td, 0, 32);
     sha3_HashBuffer(256, SHA3_FLAGS_KECCAK, string_bytes_3, sizeof(string_bytes_3), h1_hash_td, sizeof(h1_hash_td));
 
-    // Test
+    gettimeofday(&stop2, NULL);
+    timersub(&stop2, &start2, &diff2);
 
-    gettimeofday(&start, NULL);
+    printf("Trapdoor took %f ms\n", diff2.tv_sec * 1000.0f + diff2.tv_usec / 1000.0f);
+
+    // Test
+    gettimeofday(&start3, NULL);
+
     int element_len_4 = element_length_in_bytes(c_1);
     unsigned char elem_bytes_4[element_len_4];
     memset(elem_bytes_4, 0, element_len_4);
@@ -142,23 +157,18 @@ int main()
 
     unsigned char h2_hash_test[32];
     memset(h2_hash_test, 0, 32);
-
     sha3_HashBuffer(256, SHA3_FLAGS_KECCAK, string_bytes_4, sizeof(string_bytes_4), h2_hash_test, sizeof(h2_hash_test));
-
     element_from_hash(h2_test, h2_hash_test, 32);
-    element_pow_zn(c_1_exp_test, c_1, h2_test);
+
+    element_pow_zn(c_1_exp_test, c_1, r);
 
     if (!element_cmp(c_2, c_1_exp_test))
     {
         printf("success\n");
     }
+    gettimeofday(&stop3, NULL);
+    timersub(&stop3, &start3, &diff3);
 
-    gettimeofday(&stop, NULL);
-    timersub(&stop, &start, &diff);
-
-    double time_used = diff.tv_sec + (double)diff.tv_usec / 1000000.0;
-
-    printf("%f", time_used);
-
+    printf("Test took %f ms\n", diff3.tv_sec * 1000.0f + diff3.tv_usec / 1000.0f);
     return 0;
 }

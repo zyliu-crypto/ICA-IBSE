@@ -10,6 +10,10 @@
 #include "string.h"
 #include <stdio.h>
 #include <time.h>
+#include <sys/time.h>
+struct timeval stop1, start1, diff1;
+struct timeval stop2, start2, diff2;
+struct timeval stop3, start3, diff3;;
 
 char *ecp="FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7FFFFFFF";
 
@@ -120,7 +124,7 @@ int main() {
     epoint_get(P_U2_S, P_U2_S_big, P_U2_S_big);
     epoint_get(Q_U_S, Q_U_S_big, Q_U_S_big);
 
-    char P_U1_S_byte[100], P_U2_S_byte[100], Q_U_S_byte[100];
+    char P_U1_S_byte[25], P_U2_S_byte[25], Q_U_S_byte[25];
 
     big_to_bytes(0, P_U1_S_big, P_U1_S_byte, FALSE);
     big_to_bytes(0, P_U2_S_big, P_U2_S_byte, FALSE);
@@ -149,9 +153,9 @@ int main() {
     Big_f1_string_DO_PK_mul_lambda = mirvar(0);
     multiply(lambda, Big_f1_string_DO_PK, Big_f1_string_DO_PK_mul_lambda);
 
-    big Cert_U;
-    Cert_U = mirvar(0);
-    add(beta_U_S, Big_f1_string_DO_PK_mul_lambda, Cert_U);
+    big Cert_U_S;
+    Cert_U_S = mirvar(0);
+    add(beta_U_S, Big_f1_string_DO_PK_mul_lambda, Cert_U_S);
 
     /*
     epoint *test1, *test2;
@@ -164,4 +168,156 @@ int main() {
 
     printf("%d", epoint_comp(test1, test2));
     */
+
+       // User Certify R
+
+    
+    big beta_U_R;
+    epoint *Q_U_R;   // Q_U = PK_U3
+    beta_U_R=mirvar(0);
+    Q_U_R = epoint_init();
+    bigbits(160, beta_U_R);
+    ecurve_mult(beta_U_R, P, Q_U_R);
+
+    big P_U1_R_big, P_U2_R_big, Q_U_R_big;
+    P_U1_R_big=mirvar(0);
+    P_U2_R_big=mirvar(0);
+    Q_U_R_big=mirvar(0);
+
+    epoint_get(P_U1_R, P_U1_R_big, P_U1_R_big);
+    epoint_get(P_U2_R, P_U2_R_big, P_U2_R_big);
+    epoint_get(Q_U_R, Q_U_R_big, Q_U_R_big);
+
+    char P_U1_R_byte[25], P_U2_R_byte[25], Q_U_R_byte[25];
+
+    big_to_bytes(0, P_U1_R_big, P_U1_R_byte, FALSE);
+    big_to_bytes(0, P_U2_R_big, P_U2_R_byte, FALSE);
+    big_to_bytes(0, Q_U_R_big, Q_U_R_byte, FALSE);
+
+    int DU_PK_len = sizeof(DU) + sizeof(P_U1_R_byte) + sizeof(P_U2_R_byte) + sizeof(Q_U_R_byte);
+    unsigned char string_DU_PK[DU_PK_len];
+    memset(string_DU_PK, 0, DU_PK_len);
+
+    strncpy(string_DU_PK, DU, sizeof(DU));
+    strncat(string_DU_PK, P_U1_R_byte, sizeof(P_U1_R_byte));
+    strncat(string_DU_PK, P_U2_R_byte, sizeof(P_U2_R_byte));
+    strncat(string_DU_PK, Q_U_R_byte, sizeof(Q_U_R_byte));
+
+
+
+    unsigned char f1_string_DU_PK[32];
+    sha3_HashBuffer(256, SHA3_FLAGS_KECCAK, string_DU_PK, sizeof(string_DU_PK), f1_string_DU_PK, sizeof(f1_string_DU_PK));
+
+    big Big_f1_string_DU_PK;
+    Big_f1_string_DU_PK = mirvar(0);
+    
+    bytes_to_big(sizeof(f1_string_DU_PK), f1_string_DU_PK, Big_f1_string_DU_PK);
+
+    big Big_f1_string_DU_PK_mul_lambda;
+    Big_f1_string_DU_PK_mul_lambda = mirvar(0);
+    multiply(lambda, Big_f1_string_DU_PK, Big_f1_string_DU_PK_mul_lambda);
+
+    big Cert_U_R;
+    Cert_U_R = mirvar(0);
+    add(beta_U_R, Big_f1_string_DU_PK_mul_lambda, Cert_U_R);
+
+
+    // Enc
+
+    gettimeofday(&start3, NULL);
+
+    char keyword_1[] = "Crypto";
+    big r;
+    epoint *C1, *kappa, *Enc_f1_P_pub;
+
+    r=mirvar(0);
+    
+    bigbits(160, r);
+    C1=epoint_init();
+    kappa=epoint_init();
+    Enc_f1_P_pub=epoint_init();
+
+    ecurve_mult(r, P,C1);
+    ecurve_mult(SK_U1_S, P_U1_R, kappa);
+
+
+    big  Enc_P_U1_R_big, Enc_P_U2_R_big, Enc_Q_U_R_big;
+    Enc_P_U1_R_big=mirvar(0);
+    Enc_P_U2_R_big=mirvar(0);
+    Enc_Q_U_R_big=mirvar(0);
+
+    epoint_get(P_U1_R, Enc_P_U1_R_big, Enc_P_U1_R_big);
+    epoint_get(P_U2_R, Enc_P_U2_R_big, Enc_P_U2_R_big);
+    epoint_get(Q_U_R, Enc_Q_U_R_big, Enc_Q_U_R_big);
+
+    char Enc_P_U1_R_byte[25], Enc_P_U2_R_byte[25], Enc_Q_U_R_byte[25];
+
+    big_to_bytes(0, Enc_P_U1_R_big, Enc_P_U1_R_byte, FALSE);
+    big_to_bytes(0, Enc_P_U2_R_big, Enc_P_U2_R_byte, FALSE);
+    big_to_bytes(0, Enc_Q_U_R_big, Enc_Q_U_R_byte, FALSE);
+
+    int Enc_DU_PK_len = sizeof(DU) + sizeof(Enc_P_U1_R_byte) + sizeof(Enc_P_U2_R_byte) + sizeof(Enc_Q_U_R_byte);
+    unsigned char Enc_string_DU_PK[Enc_DU_PK_len];
+    memset(Enc_string_DU_PK, 0, Enc_DU_PK_len);
+
+    strncpy(Enc_string_DU_PK, DU, sizeof(DU));
+    strncat(Enc_string_DU_PK, Enc_P_U1_R_byte, sizeof(Enc_P_U1_R_byte));
+    strncat(Enc_string_DU_PK, Enc_P_U2_R_byte, sizeof(Enc_P_U2_R_byte));
+    strncat(Enc_string_DU_PK, Enc_Q_U_R_byte, sizeof(Enc_Q_U_R_byte));
+
+
+    unsigned char Enc_f1_string_DU_PK[32];
+    sha3_HashBuffer(256, SHA3_FLAGS_KECCAK, Enc_string_DU_PK, sizeof(Enc_string_DU_PK), Enc_f1_string_DU_PK, sizeof(Enc_f1_string_DU_PK));
+
+    big Enc_Big_f1_string_DU_PK;
+    Enc_Big_f1_string_DU_PK = mirvar(0);
+    
+    bytes_to_big(sizeof(Enc_f1_string_DU_PK), Enc_f1_string_DU_PK, Enc_Big_f1_string_DU_PK);
+
+    epoint *Enc_Big_f1_string_DU_PK_mul_P_pub;
+    Enc_Big_f1_string_DU_PK_mul_P_pub = epoint_init();
+    ecurve_mult(Enc_Big_f1_string_DU_PK, P_pub, Enc_Big_f1_string_DU_PK_mul_P_pub);
+
+    epoint *R_B_tmp1, *R_B_tmp2, *R_B;
+    R_B = epoint_init();
+    epoint_copy(P_U2_R, R_B);
+    ecurve_add(Q_U_R, R_B);
+    ecurve_add(Enc_Big_f1_string_DU_PK_mul_P_pub, R_B);
+
+
+    big  Enc_kappa_big;
+    Enc_kappa_big=mirvar(0);
+    epoint_get(kappa, Enc_kappa_big, Enc_kappa_big);
+
+    char Enc_kappa_byte[25];
+
+    big_to_bytes(0, Enc_kappa_big, Enc_kappa_byte, FALSE);
+
+     int Enc_DO_DU_kappa_kw_len = sizeof(DO) + sizeof(DU) + sizeof(Enc_kappa_byte) + sizeof(keyword_1);
+    unsigned char Enc_DO_DU_kappa_kw[Enc_DO_DU_kappa_kw_len];
+    memset(Enc_DO_DU_kappa_kw, 0, Enc_DO_DU_kappa_kw_len);
+
+    strncpy(Enc_DO_DU_kappa_kw, DO, sizeof(DO));
+    strncat(Enc_DO_DU_kappa_kw, DU, sizeof(DU));
+    strncat(Enc_DO_DU_kappa_kw, Enc_kappa_byte, sizeof(Enc_kappa_byte));
+    strncat(Enc_DO_DU_kappa_kw, keyword_1, sizeof(keyword_1));
+
+    big Enc_Big_DO_DU_kappa_kw;
+    Enc_Big_DO_DU_kappa_kw = mirvar(0);
+    
+    bytes_to_big(sizeof(Enc_DO_DU_kappa_kw), Enc_DO_DU_kappa_kw, Enc_Big_DO_DU_kappa_kw);
+    
+    big r_mul_Enc_Big_DO_DU_kappa_kw;
+    r_mul_Enc_Big_DO_DU_kappa_kw = mirvar(0);
+    multiply(r, Enc_Big_DO_DU_kappa_kw, r_mul_Enc_Big_DO_DU_kappa_kw);
+    
+    epoint *mu;
+    mu = epoint_init();
+    ecurve_mult(r_mul_Enc_Big_DO_DU_kappa_kw, R_B, mu);
+
+
+    gettimeofday(&stop3, NULL);
+    timersub(&stop3, &start3, &diff3);
+
+    printf("Test took %f ms\n", diff3.tv_sec * 1000.0f + diff3.tv_usec / 1000.0f);
 }

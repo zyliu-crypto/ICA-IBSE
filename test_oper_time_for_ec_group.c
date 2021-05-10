@@ -130,6 +130,10 @@ int main()
     big_to_bytes(50, P_U2_S_big, P_U2_S_byte, FALSE);
     big_to_bytes(50, Q_U_S_big, Q_U_S_byte, FALSE);
 
+    //printf("P_U1_S_byte:  %s with length %ld\n\n", P_U1_S_byte, sizeof(P_U1_S_byte));
+    //printf("P_U2_S_byte:  %s with length %ld\n\n", P_U2_S_byte, sizeof(P_U2_S_byte));
+    //printf("Q_U_S_byte:  %s with length %ld\n\n", Q_U_S_byte, sizeof(Q_U_S_byte));
+
     int DO_PK_len = sizeof(DO) + sizeof(P_U1_S_byte) + sizeof(P_U2_S_byte) + sizeof(Q_U_S_byte);
     unsigned char string_DO_PK[DO_PK_len];
     memset(string_DO_PK, 0, DO_PK_len);
@@ -318,6 +322,7 @@ int main()
     test2 = mirvar(0);
     multiply(SK_U2_S_add_Cert_S, inv_SK_U2_S_add_Cert_S, test);
     divide(test, p, test2);
+    cotnum(test2, stdout);
 
     C2 = mirvar(0);
     multiply(s, inv_SK_U2_S_add_Cert_S, C2);
@@ -392,7 +397,7 @@ int main()
     gettimeofday(&stop1, NULL);
     timersub(&stop1, &start1, &diff1);
 
-    printf("%f ", diff1.tv_sec * 1000.0f + diff1.tv_usec / 1000.0f);
+    printf("Enc took %f ms\n", diff1.tv_sec * 1000.0f + diff1.tv_usec / 1000.0f);
 
     // Trapdoor
 
@@ -456,6 +461,10 @@ int main()
     big_to_bytes(50, TD_P_U2_S_big, TD_P_U2_S_byte, FALSE);
     big_to_bytes(50, TD_Q_S_big, TD_Q_S_byte, FALSE);
 
+    //printf("TD_P_U1_S_byte:  %s with length %ld\n\n", TD_P_U1_S_byte, sizeof(TD_P_U1_S_byte));
+    //printf("TD_P_U2_S_byte:  %s with length %ld\n\n", TD_P_U2_S_byte, sizeof(TD_P_U2_S_byte));
+    //printf("TD_Q_S_byte:  %s with length %ld\n\n", TD_Q_S_byte, sizeof(TD_Q_S_byte));
+
     int TD_DO_PK_S1_PK_S2_PK_S3_len = sizeof(DO) + sizeof(TD_P_U1_S_byte) + sizeof(TD_P_U2_S_byte) + sizeof(TD_Q_S_byte);
     unsigned char TD_DO_PK_S1_PK_S2_PK_S3[TD_DO_PK_S1_PK_S2_PK_S3_len];
     memset(TD_DO_PK_S1_PK_S2_PK_S3, 0, TD_DO_PK_S1_PK_S2_PK_S3_len);
@@ -486,7 +495,7 @@ int main()
     gettimeofday(&stop2, NULL);
     timersub(&stop2, &start2, &diff2);
 
-    printf("%f ", diff2.tv_sec * 1000.0f + diff2.tv_usec / 1000.0f);
+    printf("Trapdoor took %f ms\n", diff2.tv_sec * 1000.0f + diff2.tv_usec / 1000.0f);
 
     // Test
 
@@ -560,10 +569,8 @@ int main()
 
     if (!strncmp(C4, Test_f4_C1C2C3_Test_t, sizeof(Test_f4_C1C2C3_Test_t)))
     {
-        //printf("success\n");
+        printf("success\n");
     }
     gettimeofday(&stop3, NULL);
     timersub(&stop3, &start3, &diff3);
-
-    printf("%f", diff3.tv_sec * 1000.0f + diff3.tv_usec / 1000.0f);
 }

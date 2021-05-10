@@ -84,7 +84,7 @@ int main()
     gettimeofday(&stop1, NULL);
     timersub(&stop1, &start1, &diff1);
 
-    printf("Enc took %f ms\n", diff1.tv_sec * 1000.0f + diff1.tv_usec / 1000.0f);
+    printf("%f ", diff1.tv_sec * 1000.0f + diff1.tv_usec / 1000.0f);
     // trapdoor
 
     gettimeofday(&start2, NULL);
@@ -114,7 +114,7 @@ int main()
     gettimeofday(&stop2, NULL);
     timersub(&stop2, &start2, &diff2);
 
-    printf("Trapdoor took %f ms\n", diff2.tv_sec * 1000.0f + diff2.tv_usec / 1000.0f);
+    printf("%f ", diff2.tv_sec * 1000.0f + diff2.tv_usec / 1000.0f);
     // test
     gettimeofday(&start3, NULL);
     element_t e_td_A;
@@ -132,13 +132,13 @@ int main()
 
     if (sizeof(B_test) == sizeof(B) && !strncmp(B_test, B, sizeof(B_test)))
     {
-        printf("success\n");
+        //printf("success\n");
     }
 
     gettimeofday(&stop3, NULL);
     timersub(&stop3, &start3, &diff3);
 
-    printf("Test took %f ms\n", diff3.tv_sec * 1000.0f + diff3.tv_usec / 1000.0f);
+    printf("%f", diff3.tv_sec * 1000.0f + diff3.tv_usec / 1000.0f);
 
     return 0;
 }

@@ -5,7 +5,7 @@
 #include <time.h>
 #include <sys/time.h>
 
-struct timeval stop_H, start_H, diff_H; // hash to point
+struct timeval stop_H, start_H, diff_H; // hash-to-point
 struct timeval stop_h, start_h, diff_h; // hash
 struct timeval stop_P, start_P, diff_P; // pairing
 struct timeval stop_E, start_E, diff_E; // exp
@@ -22,7 +22,7 @@ int main()
     pbc_param_init_a_gen(par, 160, 512);
     pairing_init_pbc_param(pairing, par);
 
-    // test H operation: mapping a 512 bits string to a G element
+    // test hash-to-point operation: mapping a 512 bits string to a G1 element
 
     element_t G_element;
     element_init_G1(G_element, pairing);
@@ -36,7 +36,7 @@ int main()
         total_time_H += (diff_H.tv_sec * 1000.0f + diff_H.tv_usec / 1000.0f);
     }
 
-    printf("H operation took %f ms\n", total_time_H / times_for_average);
+    printf("hash-to-point operation took %f ms\n", total_time_H / times_for_average);
 
     // test h operation: mapping a 512 bits string to a 256bit hash value
 

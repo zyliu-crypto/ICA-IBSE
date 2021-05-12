@@ -13,10 +13,9 @@
 #include <sys/time.h>
 
 #define times_for_average 1000
-struct timeval stop_mm, start_mm, diff_mm; // modular multiplication over Z_p
-struct timeval stop_mi, start_mi, diff_mi; // moudlar inverse over Z_p
-struct timeval stop_pa, start_pa, diff_pa; // point add over G
-struct timeval stop_sm, start_sm, diff_sm; // scalar mul over G
+struct timeval stop_mi, start_mi, diff_mi; // modular inverse over Z_p
+struct timeval stop_pa, start_pa, diff_pa; // point add over G_ec
+struct timeval stop_sm, start_sm, diff_sm; // scalar mul over G_ec
 
 char *ecp = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7FFFFFFF";
 
@@ -31,7 +30,6 @@ char *ecy = "23A628553168947D59DCC912042351377AC5FB32";
 
 char *ecq = "100000000000000000001F4C8F927AED3CA752257";
 
-char DU[] = "Bob";
 int main()
 {
 
@@ -70,17 +68,17 @@ int main()
     mip->IOBASE = 10;
     epoint_set(x, y, 0, P);
 
+
+    // test scalar mul
     big random_big1;
     epoint *P1, *P2;
 
     random_big1 = mirvar(0);
     P1 = epoint_init();
-        P2 = epoint_init();
+    P2 = epoint_init();
     bigbits(160, random_big1);
 
-
-        ecurve_mult(random_big1, P, P1);
-
+    ecurve_mult(random_big1, P, P1);
 
     float total_time_sm = 0.0;
     for (int i = 0; i < times_for_average; i++)
@@ -93,29 +91,9 @@ int main()
         total_time_sm += (diff_sm.tv_sec * 1000.0f + diff_sm.tv_usec / 1000.0f);
     }
 
-    printf("sm operation took %f ms\n", total_time_sm / times_for_average);
+    printf("scalar mul operation took %f ms\n", total_time_sm / times_for_average);
 
-    big random_big2, random_big3, random_big4;
-
-    random_big2 = mirvar(0);
-    random_big3 = mirvar(0);
-    random_big4 = mirvar(0);
-
-    bigbits(160, random_big2);
-    bigbits(160, random_big3);
-    float total_time_mm = 0.0;
-    for (int i = 0; i < times_for_average; i++)
-    {
-        gettimeofday(&start_mm, NULL);
-
-        multiply(random_big2, random_big3, random_big4);
-        gettimeofday(&stop_mm, NULL);
-        timersub(&stop_mm, &start_mm, &diff_mm);
-        total_time_mm += (diff_mm.tv_sec * 1000.0f + diff_mm.tv_usec / 1000.0f);
-    }
-
-    printf("mm operation took %f ms\n", total_time_mm / times_for_average);
-
+    // test modular inverse
     big before_inv, inv;
     before_inv = mirvar(0);
     inv = mirvar(0);
@@ -133,8 +111,9 @@ int main()
         total_time_mi += (diff_mi.tv_sec * 1000.0f + diff_mi.tv_usec / 1000.0f);
     }
 
-    printf("mi operation took %f ms\n", total_time_mi / times_for_average);
+    printf("modular inverse operation took %f ms\n", total_time_mi / times_for_average);
 
+    // test point add
     float total_time_pa = 0.0;
     for (int i = 0; i < times_for_average; i++)
     {
@@ -147,5 +126,5 @@ int main()
         total_time_pa += (diff_pa.tv_sec * 1000.0f + diff_pa.tv_usec / 1000.0f);
     }
 
-    printf("pa operation took %f ms\n", total_time_pa / times_for_average);
+    printf("point add operation took %f ms\n", total_time_pa / times_for_average);
 }

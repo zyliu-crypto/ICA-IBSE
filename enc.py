@@ -11,20 +11,20 @@ Ours =[0.0, 252.9290000000001, 508.1669999999999, 761.7729999999998, 1014.336999
 
 
 
-plt.figure(figsize=(15,13),linewidth = 2)
-plt.plot(number,LHS19,'o-',color = 'g', markersize=10, label="LHS19")
+plt.figure(figsize=(15,10),linewidth = 3)
+plt.plot(number,LHS19,'o-',color = 'g', markersize=15, linewidth=3,label="LHS19")
 
-plt.plot(number,QCH20,'x-',color = 'b',  markersize=10, label="QCH20")
+plt.plot(number,QCH20,'X-',color = 'b',  markersize=15, linewidth=3,label="QCH20")
 
-plt.plot(number,LLW21,'s-',color = 'k', markersize=10,  label="LLW21")
+plt.plot(number,LLW21,'s-',color = 'k', markersize=15, linewidth=3, label="LLW21")
 
-plt.plot(number,Ours,'*-',color = 'r', markersize=10,  label="Ours")
+plt.plot(number,Ours,'*-',color = 'r', markersize=15, linewidth=3, label="Ours")
 
 
 
-plt.xticks(fontsize=20)
+plt.xticks(fontsize=25)
 
-plt.yticks(fontsize=20)
+plt.yticks(fontsize=25)
 
 
 plt.xlabel("Number of Executions", fontsize=30, labelpad = 15)
@@ -35,6 +35,6 @@ plt.ylim([0, 6000])
 plt.ylabel("Time Cost of Keyword Encryption (ms)", fontsize=30, labelpad = 20)
 
 
-plt.legend(loc = "best", fontsize=20)
+plt.legend(loc = "best", fontsize=25)
 
 plt.savefig("enc.png",dpi=600)

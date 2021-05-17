@@ -8,22 +8,21 @@ QCH20 =[0.0, 362.849, 734.7860000000004, 1104.6680000000003, 1472.0670000000002,
 LLW21 =[0.0, 98.19199999999998, 193.2829999999999, 288.5049999999997, 391.5959999999995, 497.4809999999993, 594.9489999999988, 698.7349999999992, 790.7599999999994, 887.9499999999992, 983.5039999999992]
 Ours =[0.0, 67.93099999999998, 136.68900000000005, 204.90899999999996, 272.873, 341.82599999999974, 410.84699999999975, 478.41799999999944, 545.7169999999992, 614.4039999999993, 683.3469999999988]
 
+plt.figure(figsize=(15,10),linewidth = 3)
+plt.plot(number,LHS19,'o-',color = 'g', markersize=15, linewidth=3,label="LHS19")
+
+plt.plot(number,QCH20,'X-',color = 'b',  markersize=15, linewidth=3,label="QCH20")
+
+plt.plot(number,LLW21,'s-',color = 'k', markersize=15, linewidth=3, label="LLW21")
+
+plt.plot(number,Ours,'*-',color = 'r', markersize=15, linewidth=3, label="Ours")
 
 
-plt.figure(figsize=(15,13),linewidth = 2)
-plt.plot(number,LHS19,'o-',color = 'g', markersize=10, label="LHS19")
-
-plt.plot(number,QCH20,'x-',color = 'b',  markersize=10, label="QCH20")
-
-plt.plot(number,LLW21,'s-',color = 'k', markersize=10,  label="LLW21")
-
-plt.plot(number,Ours,'*-',color = 'r', markersize=10,  label="Ours")
 
 
+plt.xticks(fontsize=25)
 
-plt.xticks(fontsize=20)
-
-plt.yticks(fontsize=20)
+plt.yticks(fontsize=25)
 
 
 plt.xlabel("Number of Executions", fontsize=30, labelpad = 15)
@@ -34,6 +33,6 @@ plt.ylim([0, 5000])
 plt.ylabel("Time Cost of Trapdoor Generation (ms)", fontsize=30, labelpad = 20)
 
 
-plt.legend(loc = "best", fontsize=20)
+plt.legend(loc = "best", fontsize=25)
 
 plt.savefig("trapdoor.png",dpi=600)

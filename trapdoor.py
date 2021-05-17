@@ -10,7 +10,7 @@ Ours =[0.0, 67.93099999999998, 136.68900000000005, 204.90899999999996, 272.873, 
 
 
 
-plt.figure(figsize=(15,10),linewidth = 2)
+plt.figure(figsize=(15,13),linewidth = 2)
 plt.plot(number,LHS19,'o-',color = 'g', markersize=10, label="LHS19")
 
 plt.plot(number,QCH20,'x-',color = 'b',  markersize=10, label="QCH20")

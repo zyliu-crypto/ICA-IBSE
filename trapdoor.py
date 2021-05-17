@@ -26,12 +26,12 @@ plt.xticks(fontsize=20)
 plt.yticks(fontsize=20)
 
 
-plt.xlabel("Number of keywords", fontsize=30, labelpad = 15)
+plt.xlabel("Number of Executions", fontsize=30, labelpad = 15)
 
 plt.xlim([0,1000])
 plt.ylim([0, 5000])
 
-plt.ylabel("Time cost of keyword encryption (ms)", fontsize=30, labelpad = 20)
+plt.ylabel("Time Cost of Trapdoor Generation (ms)", fontsize=30, labelpad = 20)
 
 
 plt.legend(loc = "best", fontsize=20)
